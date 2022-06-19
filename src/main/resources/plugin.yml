@@ -1,0 +1,8 @@
+name: SerienNummer
+version: '${project.version}'
+main: com.tom.seriennummer.Main
+authors: [ Tom ]
+description: Serien Nummern
+commands:
+  seriennummer:
+    description: Seriennummer hinzufügen/abrufen/entfernen
