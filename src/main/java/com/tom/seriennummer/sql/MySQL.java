@@ -20,23 +20,27 @@ public class MySQL {
         connect();
     }
 
-    public void connect() {
+    public boolean connect() {
         try {
             con = DriverManager.getConnection("jdbc:mysql://" + HOST + ":3306/" + DATABASE + "?autoReconnect=true", USER, PASSWORD);
             System.out.println("[MySQL] Die Verbindung zur MySQL wurde hergestellt!");
+            return true;
         } catch (SQLException e) {
             System.out.println("[MySQL] Die Verbindung zur MySQL ist fehlgeschlagen! Fehler: " + e.getMessage());
+            return false;
         }
     }
 
-    public void close() {
+    public boolean close() {
         try {
             if(con != null) {
                 con.close();
                 System.out.println("[MySQL] Die Verbindung zur MySQL wurde Erfolgreich beendet!");
             }
+            return true;
         } catch (SQLException e) {
             System.out.println("[MySQL] Fehler beim beenden der Verbindung zur MySQL! Fehler: " + e.getMessage());
+            return false;
         }
     }
 
@@ -47,7 +51,7 @@ public class MySQL {
             st.close();
             return true;
         } catch (SQLException e) {
-            connect();
+            //connect();
             System.err.println(e);
             return false;
         }
@@ -60,9 +64,13 @@ public class MySQL {
             Statement st = con.createStatement();
             rs = st.executeQuery(qry);
         } catch (SQLException e) {
-            connect();
+            //connect();
             System.err.println(e);
         }
         return rs;
+    }
+
+    public boolean hasConnection() {
+        return con != null;
     }
 }

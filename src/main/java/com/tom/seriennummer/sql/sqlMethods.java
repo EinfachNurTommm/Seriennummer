@@ -1,5 +1,6 @@
 package com.tom.seriennummer.sql;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.tom.seriennummer.Main;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -89,7 +90,9 @@ public class sqlMethods {
 
         try {
             ResultSet rs = plugin.mysql.query("SELECT * FROM `sn_numbers` WHERE `Number` = \"" + number + "\";");
-            System.out.println("SELECT * FROM `sn_numbers` WHERE `Number` = \"" + number + "\";");
+            if(rs == null) {
+                return null;
+            }
 
             if(rs.next()) {
                 mat = rs.getString("Item");
@@ -109,18 +112,32 @@ public class sqlMethods {
     }
 
 
-    public boolean numberExist(int number) {
+    public List<Boolean> numberExist(int number) {
+        List<Boolean> myList = new ArrayList<Boolean>();
         try {
             ResultSet rs = plugin.mysql.query("SELECT * FROM `sn_numbers` WHERE `Number` = \"" + number + "\";");
+            if(rs == null) {
+                myList.add(false); // Nummer existiert
+                myList.add(false); // Connection zu Datenbank
+                return myList;
+            }
 
             if(rs.next()) {
-                return rs.getString("Number") != null;
+                myList.add(rs.getString("Number") != null);
+                myList.add(true);
+                return myList;
             }
-            return false;
+
+            myList.add(false);
+            myList.add(true);
+            return myList;
         } catch(Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        myList.add(false); // Nummer existiert
+        myList.add(false); // Connection zu Datenbank
+        return myList;
+
     }
 }

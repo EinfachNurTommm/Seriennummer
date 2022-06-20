@@ -3,6 +3,7 @@ package com.tom.seriennummer.commands;
 import com.tom.seriennummer.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Chest;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -57,18 +58,25 @@ public class Commands implements CommandExecutor {
                 case "getitem":
                     if(args.length == 2) {
                         int number = Integer.parseInt(args[1]);
-                        if(plugin.sql.numberExist(number)){
+                        if(plugin.sql.numberExist(number).get(1)){
+                            if(plugin.sql.numberExist(number).get(0)) {
 
-                            List<String> myList = plugin.sql.getItem(number);
+                                List<String> myList = plugin.sql.getItem(number);
 
-                            Material mat = Material.getMaterial(myList.get(0));
-                            int meta = Integer.parseInt(myList.get(1));
-                            String playerName = myList.get(2);
 
-                            p.sendMessage("Das Item mit der Seriennummer " + number + " wurde von " + playerName + " erstellt und ist " + mat + " mit einer Meta von " + meta + ".");
+                                if(myList != null) {
+                                    Material mat = Material.getMaterial(myList.get(0));
+                                    int meta = Integer.parseInt(myList.get(1));
+                                    String playerName = myList.get(2);
+
+                                    p.sendMessage("Das Item mit der Seriennummer " + number + " wurde von " + playerName + " erstellt und ist " + mat + " mit einer Meta von " + meta + ".");
+                                }
+                            } else {
+                                p.sendMessage("Die Seriennummer " + number + " existiert nicht!");
+                            }
 
                         } else {
-                            p.sendMessage("Die Seriennummer " + number + " existiert nicht!");
+                            p.sendMessage("Es konnte keine verbindung zur Datenbank hergestellt werden!");
                         }
 
                     } else {

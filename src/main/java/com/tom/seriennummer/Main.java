@@ -22,10 +22,14 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
 
         mysql = new MySQL("localhost", "seriennummer", "admin", "banane");
-        this.npcManager = new NPC();
-        registerMyCommands();
-        registerMyEvents();
-        System.out.println("SerienNummer gestartet!");
+        if(mysql.hasConnection()) {
+            this.npcManager = new NPC();
+            registerMyCommands();
+            registerMyEvents();
+            System.out.println("SerienNummer gestartet!");
+        } else {
+            System.out.println("Seriennummer wurde nicht gestartet, da die Datenbank nicht erreicht werden konnte!");
+        }
     }
 
     @Override
@@ -47,8 +51,12 @@ public final class Main extends JavaPlugin {
         Random rand = new Random();
         int number = Integer.parseInt(String.format("%06d", rand.nextInt(999999)));
 
-        while(sql.numberExist(number)) {
-            number = Integer.parseInt(String.format("%06d", rand.nextInt(999999)));
+        if(sql.numberExist(number).get(1)) {
+            while(sql.numberExist(number).get(0)) {
+                number = Integer.parseInt(String.format("%06d", rand.nextInt(999999)));
+            }
+        } else {
+            return -1;
         }
 
         return number;
