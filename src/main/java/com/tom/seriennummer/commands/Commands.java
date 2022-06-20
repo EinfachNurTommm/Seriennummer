@@ -3,7 +3,6 @@ package com.tom.seriennummer.commands;
 import com.tom.seriennummer.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.block.Chest;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -94,7 +93,7 @@ public class Commands implements CommandExecutor {
                                 p.sendMessage("Der Spieler hat noch keine Seriennummern erstellt!");
                             } else {
 
-                                p.sendMessage("Der Spieler: " + p.getName() + " hat folgende Seriennummern erstellt:");
+                                p.sendMessage("Der Spieler: " + pp.getName() + " hat folgende Seriennummern erstellt:");
                                 for(int i = 0; i<numbers.size(); i++) {
                                     int myNumber = i+1;
                                     p.sendMessage(myNumber + ". " + numbers.get(i));
@@ -127,6 +126,10 @@ public class Commands implements CommandExecutor {
                             }
                         }
                     }
+                    break;
+
+                case "check":
+                    plugin.checker.checkInventorys();
                     break;
 
                 case "gui":

@@ -1,9 +1,7 @@
 package com.tom.seriennummer.sql;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.tom.seriennummer.Main;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -49,9 +47,9 @@ public class sqlMethods {
         List<String> newLore = new ArrayList<String>();
 
         if(plugin.mysql.update("DELETE FROM `sn_numbers` WHERE `Number` = \"" + number + "\";")) {
-            for(int i = 0; i < lore.size(); i++) {
-                if(!lore.get(i).contains("SN:")) {
-                    newLore.add(lore.get(i));
+            for (String s : lore) {
+                if (!s.contains("SN:")) {
+                    newLore.add(s);
                 }
             }
 
@@ -138,6 +136,25 @@ public class sqlMethods {
         myList.add(false); // Nummer existiert
         myList.add(false); // Connection zu Datenbank
         return myList;
-
     }
+
+    public List<Material> getMaterialList() {
+        List<Material> myList = new ArrayList<Material>();
+
+        try {
+            ResultSet rs = plugin.mysql.query("SELECT `Item` FROM `sn_numbers`;");
+
+            while(rs.next()) {
+                if(!myList.contains(Material.getMaterial(rs.getString("Item")))) {
+                    myList.add(Material.getMaterial(rs.getString("Item")));
+                }
+            }
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return myList;
+    }
+
 }

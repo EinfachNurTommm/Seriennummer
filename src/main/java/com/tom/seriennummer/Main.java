@@ -6,7 +6,10 @@ import com.tom.seriennummer.listeners.Listeners;
 import com.tom.seriennummer.npc.NPC;
 import com.tom.seriennummer.sql.MySQL;
 import com.tom.seriennummer.sql.sqlMethods;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Random;
 
@@ -14,6 +17,7 @@ public final class Main extends JavaPlugin {
 
     public sqlMethods sql = new sqlMethods(this);
     public GuiInventory gui = new GuiInventory(this);
+    public doubleItemChecker checker = new doubleItemChecker(this);
     public NPC npcManager;
 
     public static MySQL mysql;
@@ -26,6 +30,7 @@ public final class Main extends JavaPlugin {
             this.npcManager = new NPC();
             registerMyCommands();
             registerMyEvents();
+            startScheduler();
             System.out.println("SerienNummer gestartet!");
         } else {
             System.out.println("Seriennummer wurde nicht gestartet, da die Datenbank nicht erreicht werden konnte!");
@@ -60,7 +65,19 @@ public final class Main extends JavaPlugin {
         }
 
         return number;
+    }
 
+    private void startScheduler() {
+        int sec = 10;
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                checker.checkInventorys();
+                System.out.println("Inventare gecheckt!");
+            }
+
+        }.runTaskTimer(this, 20*sec, 20*sec);
     }
 
 }

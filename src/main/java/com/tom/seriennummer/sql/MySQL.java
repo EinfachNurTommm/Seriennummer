@@ -51,7 +51,6 @@ public class MySQL {
             st.close();
             return true;
         } catch (SQLException e) {
-            //connect();
             System.err.println(e);
             return false;
         }
@@ -64,7 +63,6 @@ public class MySQL {
             Statement st = con.createStatement();
             rs = st.executeQuery(qry);
         } catch (SQLException e) {
-            //connect();
             System.err.println(e);
         }
         return rs;
