@@ -3,6 +3,7 @@ package com.tom.seriennummer;
 import com.tom.seriennummer.commands.Commands;
 import com.tom.seriennummer.gui.GuiInventory;
 import com.tom.seriennummer.listeners.Listeners;
+import com.tom.seriennummer.npc.NPC;
 import com.tom.seriennummer.sql.MySQL;
 import com.tom.seriennummer.sql.sqlMethods;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,6 +14,7 @@ public final class Main extends JavaPlugin {
 
     public sqlMethods sql = new sqlMethods(this);
     public GuiInventory gui = new GuiInventory(this);
+    public NPC npcManager;
 
     public static MySQL mysql;
 
@@ -20,6 +22,7 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
 
         mysql = new MySQL("localhost", "seriennummer", "admin", "banane");
+        this.npcManager = new NPC();
         registerMyCommands();
         registerMyEvents();
         System.out.println("SerienNummer gestartet!");

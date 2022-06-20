@@ -40,14 +40,16 @@ public class MySQL {
         }
     }
 
-    public void update(String qry) {
+    public boolean update(String qry) {
         try {
             Statement st = con.createStatement();
             st.executeUpdate(qry);
             st.close();
+            return true;
         } catch (SQLException e) {
             connect();
             System.err.println(e);
+            return false;
         }
     }
 

@@ -126,9 +126,16 @@ public class Commands implements CommandExecutor {
                         if(item.getItemMeta().hasLore()) {
                             for(int i = 0; i < item.getItemMeta().getLore().size(); i++) {
                                 if(item.getItemMeta().getLore().get(i).contains("SN:")) {
-                                    p.openInventory(plugin.gui.getInventroy('r'));
+                                    hasSN = true;
                                 }
                             }
+
+                            if(!hasSN) {
+                                p.openInventory(plugin.gui.getInventroy('a'));
+                            } else {
+                                p.openInventory(plugin.gui.getInventroy('r'));
+                            }
+
                         } else {
                             if (p.getItemInHand().getAmount() == 1) {
                                 p.openInventory(plugin.gui.getInventroy('a'));

@@ -1,12 +1,15 @@
 package com.tom.seriennummer.listeners;
 
 import com.tom.seriennummer.Main;
+import com.tom.seriennummer.npc.PacketReader;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 public class Listeners implements Listener {
 
@@ -46,5 +49,22 @@ public class Listeners implements Listener {
             }
         }
     }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        PacketReader pr = new PacketReader(e.getPlayer(), plugin);
+        pr.inject();
+    }
+
+    @EventHandler
+    public void onSneak(PlayerToggleSneakEvent e){
+        Player p = e.getPlayer();
+
+        if(e.isSneaking()){
+            Location loc = p.getLocation();
+            plugin.npcManager.createNPC(p, "Test");
+        }
+    }
+
 
 }

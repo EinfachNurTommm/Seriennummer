@@ -20,21 +20,24 @@ public class sqlMethods {
     }
 
     public void addItem(Player p, int number) {
+
         ItemStack item = p.getItemInHand();
         Material mat = item.getType();
         ItemMeta meta = item.getItemMeta();
         List<String> lore = new ArrayList<String>();
 
-        if(meta.hasLore()) {
-            lore = meta.getLore();
+        if(plugin.mysql.update("INSERT INTO `sn_numbers`(`Number`, `Item`, `Meta`, `Player`) VALUES ('" + number + "','" + mat + "','" + item.getDurability() + "','" + p.getName() + "')")) {
+            if(meta.hasLore()) {
+                lore = meta.getLore();
+            }
+
+            lore.add("§cSN: " + number);
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+        } else {
+            p.sendMessage("Es konnte keine verbindung zur Datenbank aufgebaut werden!");
         }
-
-        lore.add("§cSN: " + number);
-        meta.setLore(lore);
-        item.setItemMeta(meta);
-
-        plugin.mysql.update("INSERT INTO `sn_numbers`(`Number`, `Item`, `Meta`, `Player`) VALUES ('" + number + "','" + mat + "','" + item.getDurability() + "','" + p.getName() + "')");
-    }
+   }
 
     public void removeItem(Player p, int number) {
 
@@ -44,16 +47,18 @@ public class sqlMethods {
         List<String> lore = meta.getLore();
         List<String> newLore = new ArrayList<String>();
 
-        for(int i = 0; i < lore.size(); i++) {
-            if(!lore.get(i).contains("SN:")) {
-                newLore.add(lore.get(i));
+        if(plugin.mysql.update("DELETE FROM `sn_numbers` WHERE `Number` = \"" + number + "\";")) {
+            for(int i = 0; i < lore.size(); i++) {
+                if(!lore.get(i).contains("SN:")) {
+                    newLore.add(lore.get(i));
+                }
             }
+
+            meta.setLore(newLore);
+            item.setItemMeta(meta);
+        } else {
+            p.sendMessage("Es konnte keine verbindung zur Datenbank aufgebaut werden!");
         }
-
-        meta.setLore(newLore);
-        item.setItemMeta(meta);
-
-        plugin.mysql.update("DELETE FROM `sn_numbers` WHERE `Number` = \"" + number + "\";");
 
     }
 
