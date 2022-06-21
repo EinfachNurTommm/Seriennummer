@@ -16,12 +16,18 @@ public class GuiInventory {
     }
 
 
+    /**
+     * Liefert das GUI Inventar
+     * @param c
+     * @return
+     */
     public Inventory getInventroy(char c) {
         Inventory inv;
 
         int color = 0;
         String name = "";
 
+        // Inventar erstellen und anhand des Char c die Daten für das Inventar festlegen
         if(c == 'a') {
             inv = Bukkit.getServer().createInventory(null, 27, "Seriennummer §ahinzufügen");
             color = 5;
@@ -32,10 +38,12 @@ public class GuiInventory {
             name = "§cSeriennummer von Item in deiner Hand entfernen?";
         }
 
+        // Jeden Slot im Inventar mit Grauen Glasscheiben ausfüllen
         for(int i = 0; i<27; i++) {
             inv.setItem(i, build(Material.STAINED_GLASS_PANE, 1, 7, "§a"));
         }
 
+        // Die Slots zum Interagieren mit den anderen Glasscheiben welche eine andere Farbe und Name haben ausfüllen
         inv.setItem(3, build(Material.STAINED_GLASS_PANE, 1, color, name));
         inv.setItem(4, build(Material.STAINED_GLASS_PANE, 1, color, name));
         inv.setItem(5, build(Material.STAINED_GLASS_PANE, 1, color, name));

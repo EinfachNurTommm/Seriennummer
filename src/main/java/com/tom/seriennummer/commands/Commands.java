@@ -26,6 +26,8 @@ public class Commands implements CommandExecutor {
 
         ItemStack item = p.getItemInHand();
 
+        // Kommentare kann man auch weglassen, aber sind jetzt nur zum Testen und zum Zeigen was man machen könnte
+
         if(args.length != 0) {
             switch(args[0]){
                 case "additem":
@@ -33,6 +35,7 @@ public class Commands implements CommandExecutor {
                         if (p.getItemInHand().getAmount() == 1) {
                             int number = plugin.getRandomNumber();
 
+                            // Prüfen, ob das Item eine Lore hat und wenn ja einmal abfragen, ob es eine Seriennummer hat
                             if (item.getItemMeta().hasLore()) {
                                 for (int i = 0; i < item.getItemMeta().getLore().size(); i++) {
                                     if (item.getItemMeta().getLore().get(i).contains("SN")) {
@@ -42,11 +45,11 @@ public class Commands implements CommandExecutor {
                                 }
 
                                 if (!hasSN) {
-                                    plugin.sql.addItem(p, number);
+                                    plugin.sql.addSN(p, number);
                                 }
 
                             } else {
-                                plugin.sql.addItem(p, number);
+                                plugin.sql.addSN(p, number);
                             }
                         } else {
                             p.sendMessage("Du kannst nur einem Item gleichzeitig eine Seriennummer geben!");
@@ -79,7 +82,7 @@ public class Commands implements CommandExecutor {
                         }
 
                     } else {
-                        p.sendMessage("Bitte nutze /seriennummer get [Nummer]");
+                        p.sendMessage("Bitte nutze /seriennummer getitem [Nummer]");
                     }
                     break;
 
@@ -116,46 +119,17 @@ public class Commands implements CommandExecutor {
 
                             int loreSize = item.getItemMeta().getLore().size();
 
+                            // Prüfen, ob das Item eine Seriennummer hat
                             for(int i = 0; i < loreSize; i++) {
-                                if(item.getItemMeta().getLore().get(i).contains("SN")) {
+                                if(item.getItemMeta().getLore().get(i).contains("SN:")) {
 
+                                    // Lore splitten, um die Seriennummer zu bekommen
                                     String[] myNumber = item.getItemMeta().getLore().get(i).split(" ");
                                     int number = Integer.parseInt(myNumber[1]);
-                                    plugin.sql.removeItem(p, number);
+                                    plugin.sql.removeSN(p, number);
                                 }
                             }
                         }
-                    }
-                    break;
-
-                case "check":
-                    plugin.checker.checkInventorys();
-                    break;
-
-                case "gui":
-                    if(item.getType() != Material.AIR) {
-                        if(item.getItemMeta().hasLore()) {
-                            for(int i = 0; i < item.getItemMeta().getLore().size(); i++) {
-                                if(item.getItemMeta().getLore().get(i).contains("SN:")) {
-                                    hasSN = true;
-                                }
-                            }
-
-                            if(!hasSN) {
-                                p.openInventory(plugin.gui.getInventroy('a'));
-                            } else {
-                                p.openInventory(plugin.gui.getInventroy('r'));
-                            }
-
-                        } else {
-                            if (p.getItemInHand().getAmount() == 1) {
-                                p.openInventory(plugin.gui.getInventroy('a'));
-                            } else {
-                                p.sendMessage("Du kannst nur einem Item gleichzeitig eine Seriennummer geben!");
-                            }
-                        }
-                    } else {
-                        p.sendMessage("Du musst ein Item in der Hand haben!");
                     }
                     break;
 
@@ -163,6 +137,11 @@ public class Commands implements CommandExecutor {
 
                     return false;
             }
+        } else {
+            p.sendMessage("§6/seriennummer additem §c- §bUm dem Item in deiner Hand eine Seriennummer zu geben");
+            p.sendMessage("§6/seriennummer remove §c- §bUm dem Item in deiner Hand die Seriennummer zu entfernen");
+            p.sendMessage("§6/seriennummer getitem [Nummer] §c- §bUm Informationen über eine bestimmte Seriennummer zu bekommen");
+            p.sendMessage("§6/seriennummer getnumbers [Name] §c- §bUm alle Seriennummern von einem Spieler zu bekommen");
         }
 
         return true;

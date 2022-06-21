@@ -3,14 +3,13 @@ package com.tom.seriennummer;
 import com.tom.seriennummer.commands.Commands;
 import com.tom.seriennummer.gui.GuiInventory;
 import com.tom.seriennummer.listeners.Listeners;
-import com.tom.seriennummer.npc.NPC;
 import com.tom.seriennummer.sql.MySQL;
 import com.tom.seriennummer.sql.sqlMethods;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
 import java.util.Random;
 
 public final class Main extends JavaPlugin {
@@ -18,7 +17,6 @@ public final class Main extends JavaPlugin {
     public sqlMethods sql = new sqlMethods(this);
     public GuiInventory gui = new GuiInventory(this);
     public doubleItemChecker checker = new doubleItemChecker(this);
-    public NPC npcManager;
 
     public static MySQL mysql;
 
@@ -27,7 +25,6 @@ public final class Main extends JavaPlugin {
 
         mysql = new MySQL("localhost", "seriennummer", "admin", "banane");
         if(mysql.hasConnection()) {
-            this.npcManager = new NPC();
             registerMyCommands();
             registerMyEvents();
             startScheduler();
@@ -52,6 +49,10 @@ public final class Main extends JavaPlugin {
     }
 
 
+    /**
+     * Zufällige Nummer welche 6 Zahlen hat und noch nicht existiert generieren
+     * @return int
+     */
     public int getRandomNumber() {
         Random rand = new Random();
         int number = Integer.parseInt(String.format("%06d", rand.nextInt(999999)));
@@ -67,6 +68,10 @@ public final class Main extends JavaPlugin {
         return number;
     }
 
+
+    /**
+     * startet einen Scheduler welcher alle 10 Sekunden die Methode checkInventorys aufruft
+     */
     private void startScheduler() {
         int sec = 10;
         new BukkitRunnable() {
